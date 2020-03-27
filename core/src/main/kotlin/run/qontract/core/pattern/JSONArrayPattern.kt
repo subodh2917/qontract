@@ -33,7 +33,6 @@ class JSONArrayPattern : Pattern {
 
     private fun failed(value: JSONArrayValue) = Result.Failure(failedMessage(value))
 
-    @Throws(Exception::class)
     override fun matches(sampleData: Value?, resolver: Resolver): Result {
         if(sampleData !is JSONArrayValue)
             return Result.Failure("$sampleData is not JSON")
@@ -69,6 +68,14 @@ class JSONArrayPattern : Pattern {
 
     override fun newBasedOn(row: Row, resolver: Resolver): List<Pattern> = newBasedOn(pattern, row, resolver)
     override fun parse(value: String, resolver: Resolver): Value = parsedJSON(value) ?: throw ContractParseException("""Parsing as $javaClass but failed. Value: $value""")
+    override fun resolveType(key: String, resolver: Resolver): Pattern? {
+        return pattern.map { pattern ->
+            when(pattern) {
+                is String -> parsedPattern(extractPatternFromRepeatingToken(pattern), null).resolveType(key, resolver)
+                else -> if(pattern != null) ExactMatchPattern(pattern) else null
+            }
+        }.firstOrNull()
+    }
 }
 
 fun newBasedOn(jsonPattern: List<Any?>, row: Row, resolver: Resolver): List<JSONArrayPattern> {

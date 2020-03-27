@@ -29,6 +29,8 @@ class NoContentPattern : Pattern {
         }
     }
 
+    override fun resolveType(key: String, resolver: Resolver): Pattern? = this
+
     override val pattern: Any = ""
 
     override fun toString(): String = "(Nothing)"

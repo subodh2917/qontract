@@ -128,7 +128,19 @@ data class Scenario(val name: String, val httpRequestPattern: HttpRequestPattern
     }
 
     val serverState: Map<String, Any?>
-        get() = expectedState
+        get() = generateServerState()
+
+    private fun generateServerState(): Map<String, Any?> {
+        val resolver = Resolver(expectedState, false)
+        resolver.customPatterns = patterns
+
+        return expectedState.mapValues { (key, value) ->
+            when(value) {
+                true -> httpRequestPattern.resolvePattern(key, resolver)?.generate(resolver) ?: true
+                else -> value
+            }
+        }
+    }
 
     fun matchesMock(response: HttpResponse): Result {
         val resolver = Resolver(IgnoreServerState(), true)

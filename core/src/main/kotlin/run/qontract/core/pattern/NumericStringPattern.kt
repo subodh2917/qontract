@@ -23,6 +23,7 @@ class NumericStringPattern : Pattern {
 
     override fun newBasedOn(row: Row, resolver: Resolver): List<Pattern> = listOf(this)
     override fun parse(value: String, resolver: Resolver): Value = NumberValue(convertToNumber(value))
+    override fun resolveType(key: String, resolver: Resolver): Pattern? = this
 
     override val pattern: Any = "(number)"
 }

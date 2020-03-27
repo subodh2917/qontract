@@ -27,6 +27,7 @@ class StringPattern : Pattern {
 
     override fun newBasedOn(row: Row, resolver: Resolver): List<Pattern> = listOf(this)
     override fun parse(value: String, resolver: Resolver): Value = StringValue(value)
+    override fun resolveType(key: String, resolver: Resolver): Pattern? = this
 
     override val pattern: Any = "(string)"
     override fun toString(): String = pattern.toString()

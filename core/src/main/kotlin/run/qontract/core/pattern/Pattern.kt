@@ -10,6 +10,7 @@ interface Pattern {
     fun newBasedOn(row: Row, resolver: Resolver): List<Pattern>
 
     fun parse(value: String, resolver: Resolver): Value
+    fun resolveType(key: String, resolver: Resolver): Pattern?
 
     val pattern: Any
 }

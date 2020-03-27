@@ -133,4 +133,10 @@ class URLMatcher : Cloneable {
         }.toList().joinToString(separator = "&"))
         return url.toString()
     }
+
+    fun resolveType(key: String, resolver: Resolver): Pattern? {
+        findValueOfKey(key, pathParameters.mapKeys { (key, value) ->
+            key.split(":")[0]
+        }, resolver) ?: findValueOfKey(key, queryPattern, resolver)
+    }
 }

@@ -54,4 +54,8 @@ data class HttpHeadersPattern(val headers: Map<String, String?> = mapOf()) {
         multipleValidKeys(headers, row) { pattern ->
             listOf(newBasedOn(row, pattern))
         }.map { HttpHeadersPattern(it) }
+
+    fun resolveType(key: String, resolver: Resolver):  {
+        findValueOfKey(key, headers, resolver)
+    }
 }

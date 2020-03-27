@@ -20,6 +20,8 @@ class NumberTypePattern : Pattern {
         return NumberValue(convertToNumber(value))
     }
 
+    override fun resolveType(key: String, resolver: Resolver): Pattern? = this
+
     override val pattern: Any = "(number)"
     override fun toString(): String = pattern.toString()
 }

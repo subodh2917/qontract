@@ -154,4 +154,18 @@ data class HttpRequestPattern(var headersPattern: HttpHeadersPattern = HttpHeade
     override fun toString(): String {
         return "$method ${urlMatcher.toString()}"
     }
+
+    fun resolvePattern(key: String, resolver: Resolver): Pattern? {
+        headersPattern.resolveType(key, resolver) ?: urlMatcher.resolveType(key, resolver) ?: body.resolveType(key, resolver) ?: findValueOfKey(key, formFieldsPattern, resolver)
+    }
 }
+
+fun <ValueType> findValueOfKey(key: String, map: Map<String, ValueType>, resolver: Resolver): ValueType? {
+    val value = map[key] ?: map[withOptionality(key)]
+    return when {
+        value is Pattern -> value.resolveType(key).generate(key, resolver)
+        value is String && isPatternToken(value) -> parsedPattern(value).resolveType(key)
+        else -> value
+    }
+}
+fun withOptionality(key: String): String = if(key.endsWith("?")) key else "$key?"
